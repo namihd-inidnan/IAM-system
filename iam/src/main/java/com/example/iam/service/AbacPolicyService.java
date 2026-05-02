@@ -1,7 +1,6 @@
 package com.example.iam.service;
 
 import com.example.iam.abac.AbacDecision;
-import com.example.iam.model.ExamPaper;
 import com.example.iam.model.User;
 import org.springframework.stereotype.Service;
 
@@ -10,28 +9,34 @@ import java.time.LocalTime;
 @Service
 public class AbacPolicyService {
 
-    public AbacDecision evaluateExamPaperAccess(
+    public AbacDecision evaluateAccess(
             User user,
-            ExamPaper paper,
+            String resourceType,   // e.g., "MARKS", "ATTENDANCE", "ADMIN"
+            String action,         // e.g., "READ", "WRITE"
             LocalTime now
     ) {
 
-        if (!"EXAM".equals(user.getDepartment())) {
-            return AbacDecision.deny("User department is not EXAM");
+        // 🔹 ROLE CHECK
+        if (resourceType.equals("ADMIN") && !user.hasRole("ADMIN")) {
+            return AbacDecision.deny("Only ADMIN can access admin resources");
         }
 
-        if (!user.getDepartment().equals(paper.getDepartment())) {
-            return AbacDecision.deny("User and resource departments do not match");
+        // 🔹 USER ACCESS (students)
+        if (resourceType.equals("USER") && action.equals("READ")) {
+            if (!user.hasRole("USER") && !user.hasRole("ADMIN")) {
+                return AbacDecision.deny("Only USER/ADMIN can access user data");
+            }
         }
 
-        LocalTime start = LocalTime.of(9, 0);
-        LocalTime end = LocalTime.of(18, 0);
+        // 🔹 TIME-BASED ACCESS
+        LocalTime start = LocalTime.of(8, 0);
+        LocalTime end = LocalTime.of(20, 0);
 
         if (now.isBefore(start) || now.isAfter(end)) {
-            return AbacDecision.deny("Access outside allowed time window");
+            return AbacDecision.deny("Access outside allowed hours");
         }
 
-        return AbacDecision.allow("ABAC policy satisfied");
+        // 🔹 DEFAULT ALLOW
+        return AbacDecision.allow("Access granted by ABAC policy");
     }
-
 }

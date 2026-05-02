@@ -16,3 +16,4 @@ public class AdminController {
         return ResponseEntity.ok("Welcome ADMIN 👑");
     }
 }
+

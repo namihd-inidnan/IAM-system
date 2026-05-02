@@ -3,7 +3,6 @@ package com.example.iam.controller;
 import com.example.iam.dto.LoginRequest;
 import com.example.iam.dto.RegisterRequest;
 import com.example.iam.service.UserService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,28 +15,19 @@ public class AuthController {
         this.userService = userService;
     }
 
-
+    // 🔹 REGISTER
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-
+    public String register(@RequestBody RegisterRequest request) {
         userService.registerUser(request);
-
-        return ResponseEntity.ok(
-                java.util.Map.of("message", "User registered successfully")
-        );
+        return "User registered successfully";
     }
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
 
-        String token = userService.login(
+    // 🔹 LOGIN (RETURN TOKEN DIRECTLY)
+    @PostMapping("/login")
+    public String login(@RequestBody LoginRequest request) {
+        return userService.login(
                 request.getEmail(),
                 request.getPassword()
         );
-
-        return ResponseEntity.ok(
-                java.util.Map.of("access_token", token)
-        );
     }
-
 }
-

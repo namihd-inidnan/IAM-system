@@ -5,8 +5,10 @@ import java.time.LocalTime;
 public class PolicySimulationRequest {
 
     private String userEmail;
-    private Long examPaperId;
-    private LocalTime simulatedTime;
+    private String resourceType;   // USER / ADMIN
+    private String action;         // READ / WRITE
+    private String requiredRole;   // USER / ADMIN
+    private LocalTime simulatedTime;;
 
     public String getUserEmail() {
         return userEmail;
@@ -16,12 +18,29 @@ public class PolicySimulationRequest {
         this.userEmail = userEmail;
     }
 
-    public Long getExamPaperId() {
-        return examPaperId;
+
+    public String getResourceType() {
+        return resourceType;
     }
 
-    public void setExamPaperId(Long examPaperId) {
-        this.examPaperId = examPaperId;
+    public void setResourceType(String resourceType) {
+        this.resourceType = resourceType;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public String getRequiredRole() {
+        return requiredRole;
+    }
+
+    public void setRequiredRole(String requiredRole) {
+        this.requiredRole = requiredRole;
     }
 
     public LocalTime getSimulatedTime() {
@@ -32,3 +51,6 @@ public class PolicySimulationRequest {
         this.simulatedTime = simulatedTime;
     }
 }
+
+
+

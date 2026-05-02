@@ -110,4 +110,9 @@ public class User {
     public void setClearanceLevel(String clearanceLevel) {
         this.clearanceLevel = clearanceLevel;
     }
+
+    public boolean hasRole(String roleName) {
+        return roles.stream()
+                .anyMatch(role -> role.getName().equalsIgnoreCase(roleName));
+    }
 }
