@@ -22,14 +22,29 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
+                .cors(cors -> {})
                 .csrf(csrf -> csrf.disable())
+
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable())
+
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
-                      //  .requestMatchers("/api/public/**").permitAll()
+
+                        // 🔓 Public
+                        .requestMatchers("/public/**").permitAll()
+
+                        // 🔥 USER access (explicit authority check)
+                        .requestMatchers("/api/user/**")
+                        .hasAuthority("ROLE_USER")
+
+                        // 🔥 ADMIN access
+                        .requestMatchers("/api/admin/**")
+                        .hasAuthority("ROLE_ADMIN")
+
+                        // 🔐 Everything else
                         .anyRequest().authenticated()
                 )
+
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class

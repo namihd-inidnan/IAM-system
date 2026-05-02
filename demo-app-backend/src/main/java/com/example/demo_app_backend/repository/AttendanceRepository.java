@@ -1,0 +1,11 @@
+package com.example.demo_app_backend.repository;
+
+import com.example.demo_app_backend.model.Attendance;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
+
+    List<Attendance> findByRegistrationId(String registrationId);
+}
